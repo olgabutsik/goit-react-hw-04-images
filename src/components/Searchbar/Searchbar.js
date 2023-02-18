@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import css from './Searchbar.styled.css';
+import css from './Searchbar.module.css';
 
 export function Searchbar({ onSubmit }) {
   const [query, setQuery] = useState('');
@@ -16,7 +16,7 @@ export function Searchbar({ onSubmit }) {
     <header className={css.SearchBar}>
       <form onSubmit={handleSubmit} className={css.SearchForm}>
         <button type="submit" className={css.SearchFormButton}>
-          <span className={css.SearchFormButtonLabel}>🔍</span>
+          <span className={css.SearchFormButtonLabel}></span>🔍
         </button>
 
         <input
@@ -26,7 +26,7 @@ export function Searchbar({ onSubmit }) {
           onChange={handleInput}
           autoComplete="off"
           autoFocus
-          placeHolder="Search images and photos"
+          placeholder="Search images and photos"
         />
       </form>
     </header>

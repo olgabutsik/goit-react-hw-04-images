@@ -1,4 +1,4 @@
-import css from './Loader.styled.css';
+import css from './Loader.module.css';
 import { Triangle } from 'react-loader-spinner';
 
 export const Loader = () => {
@@ -12,7 +12,6 @@ export const Loader = () => {
         className={css.Loader}
         visible={true}
       />
-      ;
     </div>
   );
 };
