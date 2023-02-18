@@ -1,15 +1,15 @@
-import React, { Component, useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { fetchPhotosByQuery } from 'services/api';
 import { SearchBar } from './Searchbar/Searchbar';
 import { ImageGallery } from './ImageGallerry/ImageGallery';
 import { Button } from './Button/Button';
 import { Loader } from './Loader/Loader';
-import { Modal } from './Modal/Modal';
+// import { Modal } from './Modal/Modal';
 import css from './APP.module.css';
 
 export function App() {
   const [photos, setPhotos] = useState([]);
-  const [page, setPage] = useState(1);
+  const [page] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
   // const [error, setError] = useState('');
   // const [largeImageURL, setLargeImageURL] = useState('');
