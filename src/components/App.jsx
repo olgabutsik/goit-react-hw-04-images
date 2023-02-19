@@ -1,37 +1,92 @@
-import React, { useState } from 'react';
+import React, { Component } from 'react';
 import { fetchPhotosByQuery } from 'services/api';
 import { SearchBar } from './Searchbar/Searchbar';
 import { ImageGallery } from './ImageGallerry/ImageGallery';
 import { Button } from './Button/Button';
 import { Loader } from './Loader/Loader';
-// import { Modal } from './Modal/Modal';
+import { Modal } from './Modal/Modal';
 import css from './APP.module.css';
 
-export function App() {
-  const [photos, setPhotos] = useState([]);
-  const [page] = useState(1);
-  const [isLoading, setIsLoading] = useState(false);
-  // const [error, setError] = useState('');
-  // const [largeImageURL, setLargeImageURL] = useState('');
-
-  const getData = async query => {
-    setIsLoading(true);
-    const data = await fetchPhotosByQuery(query, page);
-    setIsLoading(false);
-    setPhotos(data);
+export class App extends Component {
+  state = {
+    query: '',
+    page: 1,
+    loading: false,
+    error: '',
+    photos: [],
+    totalHits: 0,
+    largeImageURL: '',
+    modal: false,
+    showLoadMore: false,
   };
-  const handleClickPhoto = () => {};
-  const handleButton = () => {};
 
-  return (
-    <div className={css.App}>
-      <SearchBar onSubmit={getData} />
-      {isLoading && <Loader />}
-      {photos.length > 0 ? (
-        <ImageGallery photos={photos} onClickPhoto={handleClickPhoto} />
-      ) : null}
-      <ImageGallery photos={photos} onClickPhoto={handleClickPhoto} />
-      <Button onLoad={handleButton} />
-    </div>
-  );
+  async componentDidUpdate(_, prevState) {
+    const { query, page } = this.state;
+    if (prevState.query !== query || prevState.page !== page) {
+      this.setState({ loading: true });
+      try {
+        const { hits, totalHits } = await fetchPhotosByQuery(query, page);
+        this.setState(prevState => ({
+          photos: [...prevState.photos, ...hits],
+          showLoadMore: page < Math.ceil(totalHits / 12),
+        }));
+      } catch (error) {
+      } finally {
+        this.setState({ loading: false });
+      }
+    }
+  }
+
+  onSubmit = query => {
+    this.setState({
+      query,
+      page: 1,
+      loading: false,
+      error: '',
+      photos: [],
+      totalHits: 0,
+      largeImageURL: '',
+      modal: false,
+      showLoadMore: false,
+    });
+  };
+
+  handleLoadMore = () => {
+    this.setState(prevState => ({ page: prevState.page + 1 }));
+  };
+
+  handleClickPhoto = largeImageURL => {
+    this.setState({ largeImageURL, modal: true });
+  };
+
+  onCloseModal = () => {
+    this.setState({ modal: false });
+  };
+
+  render() {
+    const { photos, showLoadMore, loading, error, modal, largeImageURL } =
+      this.state;
+    return (
+      <>
+        {loading && <Loader />}
+        <div className={css.App}>
+          <SearchBar onSubmit={this.onSubmit} />
+          {error && <p>No photos found!!!</p>}
+          {photos.length > 0 ? (
+            <ImageGallery
+              photos={photos}
+              onClickPhoto={this.handleClickPhoto}
+            />
+          ) : null}
+          {showLoadMore && <Button onLoad={this.handleLoadMore} />}
+          {modal && (
+            <Modal
+              largeImageURL={largeImageURL}
+              onCloseModal={this.onCloseModal}
+            />
+          )}
+        </div>
+      </>
+    );
+  }
 }

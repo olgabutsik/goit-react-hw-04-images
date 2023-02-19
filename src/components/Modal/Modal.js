@@ -1,5 +1,5 @@
 import { Component } from 'react';
-import css from './Modal.styled.css';
+import css from './Modal.module.css';
 
 export class Modal extends Component {
   componentDidMount() {
@@ -12,13 +12,13 @@ export class Modal extends Component {
 
   onCloseByEsc = e => {
     if (e.code === 'Escape') {
-      this.props.onClose();
+      this.props.onCloseModal();
     }
   };
 
   handleClick = e => {
     if (e.currentTarget === e.target) {
-      this.props.onClose();
+      this.props.onCloseModal();
     }
   };
 
