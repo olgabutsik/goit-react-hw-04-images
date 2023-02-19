@@ -28,7 +28,7 @@ export class App extends Component {
         const { hits, totalHits } = await fetchPhotosByQuery(query, page);
         this.setState(prevState => ({
           photos: [...prevState.photos, ...hits],
-          showLoadMore: page < Math.ceil(totalHits / 12),
+          showLoadMore: page < Math.ceil(totalHits / 20),
         }));
       } catch (error) {
       } finally {
