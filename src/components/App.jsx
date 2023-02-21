@@ -31,6 +31,7 @@ export function App() {
         setLoading(false);
       }
     };
+
     if (query) {
       fetchPhotos();
     }
